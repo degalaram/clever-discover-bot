@@ -80,12 +80,12 @@ const Index = () => {
     <div className="min-h-screen bg-background overflow-x-hidden">
       <header className="border-b bg-card/80 backdrop-blur-md sticky top-0 z-20">
         <div className="container max-w-6xl mx-auto flex items-center justify-between h-14 px-3 sm:px-4">
-          <div className="flex items-center gap-2.5 min-w-0">
+          <a href="/" className="flex items-center gap-2.5 min-w-0 cursor-pointer no-underline">
             <div className="h-8 w-8 rounded-lg bg-gradient-ai flex items-center justify-center shadow-card shrink-0">
               <ShoppingBag className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="font-display font-bold text-lg text-foreground tracking-tight truncate">DiscvrAI</span>
-          </div>
+          </a>
           <span className="text-[10px] text-muted-foreground bg-muted px-2.5 py-1 rounded-full flex items-center gap-1 font-medium uppercase tracking-wider shrink-0">
             <Zap className="h-3 w-3 text-primary" />
             AI-Powered
