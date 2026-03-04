@@ -84,7 +84,7 @@ const SearchBar = ({ onSearch, isLoading }: SearchBarProps) => {
               setQuery(s.text);
               onSearch(s.text);
             }}
-            className="text-xs px-3.5 py-2 rounded-full border bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all duration-200 flex items-center gap-1.5"
+            className="text-xs px-3.5 py-2 rounded-full border bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all duration-200 flex items-center gap-1.5 max-w-full text-left whitespace-normal"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             initial={{ opacity: 0, y: 8 }}
