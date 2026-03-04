@@ -4,24 +4,21 @@ import ProductCard from "@/components/ProductCard";
 import SearchBar from "@/components/SearchBar";
 import CategoryFilter from "@/components/CategoryFilter";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
-import ProductDetailModal from "@/components/ProductDetailModal";
 import ReactMarkdown from "react-markdown";
 import { Sparkles, ShoppingBag, Package, Zap } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [filteredProducts, setFilteredProducts] = useState<Product[] | null>(null);
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const categories = useMemo(
-    () => [...new Set(products.map((p) => p.category))],
-    []
-  );
+  const categories = useMemo(() => [...new Set(products.map((p) => p.category))], []);
 
   const baseProducts = filteredProducts ?? products;
   const displayProducts = selectedCategory
@@ -59,7 +56,7 @@ const Index = () => {
       if (summary) {
         setAiSummary(summary);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Search error:", err);
       setError("AI service temporarily unavailable. Please try again.");
       setFilteredProducts(null);
@@ -75,31 +72,28 @@ const Index = () => {
     setSelectedCategory(null);
   };
 
+  const handleOpenProduct = (product: Product) => {
+    navigate(`/product/${product.id}`);
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <header className="border-b bg-card/80 backdrop-blur-md sticky top-0 z-20">
-        <div className="container max-w-6xl mx-auto flex items-center justify-between h-14 px-4">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-gradient-ai flex items-center justify-center shadow-card">
+        <div className="container max-w-6xl mx-auto flex items-center justify-between h-14 px-3 sm:px-4">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="h-8 w-8 rounded-lg bg-gradient-ai flex items-center justify-center shadow-card shrink-0">
               <ShoppingBag className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-display font-bold text-lg text-foreground tracking-tight">
-              DiscvrAI
-            </span>
+            <span className="font-display font-bold text-lg text-foreground tracking-tight truncate">DiscvrAI</span>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] text-muted-foreground bg-muted px-2.5 py-1 rounded-full flex items-center gap-1 font-medium uppercase tracking-wider">
-              <Zap className="h-3 w-3 text-primary" />
-              AI-Powered
-            </span>
-          </div>
+          <span className="text-[10px] text-muted-foreground bg-muted px-2.5 py-1 rounded-full flex items-center gap-1 font-medium uppercase tracking-wider shrink-0">
+            <Zap className="h-3 w-3 text-primary" />
+            AI-Powered
+          </span>
         </div>
       </header>
 
-      {/* Hero + Search */}
-      <section className="pt-14 pb-8 px-4 relative overflow-hidden">
-        {/* Background decoration */}
+      <section className="pt-12 sm:pt-14 pb-8 px-3 sm:px-4 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/5 rounded-full blur-3xl" />
         </div>
@@ -132,17 +126,14 @@ const Index = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Ask in natural language — our AI understands what you need and finds
-            the perfect match.
+            Ask in natural language — our AI understands what you need and finds the perfect match.
           </motion.p>
 
           <SearchBar onSearch={handleSearch} isLoading={isLoading} />
         </div>
       </section>
 
-      {/* Results */}
-      <main className="container max-w-6xl mx-auto px-4 pb-20">
-        {/* Error */}
+      <main className="container max-w-6xl mx-auto px-3 sm:px-4 pb-16 sm:pb-20">
         <AnimatePresence>
           {error && (
             <motion.div
@@ -156,7 +147,6 @@ const Index = () => {
           )}
         </AnimatePresence>
 
-        {/* AI Summary */}
         <AnimatePresence>
           {aiSummary && (
             <motion.div
@@ -170,9 +160,7 @@ const Index = () => {
                 <div className="h-6 w-6 rounded-md bg-gradient-ai flex items-center justify-center">
                   <Sparkles className="h-3 w-3 text-primary-foreground" />
                 </div>
-                <span className="font-display font-semibold text-sm text-foreground">
-                  AI Recommendation
-                </span>
+                <span className="font-display font-semibold text-sm text-foreground">AI Recommendation</span>
               </div>
               <div className="text-sm text-muted-foreground prose prose-sm max-w-none leading-relaxed">
                 <ReactMarkdown>{aiSummary}</ReactMarkdown>
@@ -181,45 +169,36 @@ const Index = () => {
           )}
         </AnimatePresence>
 
-        {/* Category filters + count + reset */}
         <div className="space-y-4 mb-6">
-          <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold text-foreground flex items-center gap-2">
-              <Package className="h-4 w-4 text-primary" />
-              {filteredProducts ? "AI Results" : "All Products"}
-              <span className="text-xs font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="font-display text-lg font-semibold text-foreground flex items-center gap-2 min-w-0">
+              <Package className="h-4 w-4 text-primary shrink-0" />
+              <span className="truncate">{filteredProducts ? "AI Results" : "All Products"}</span>
+              <span className="text-xs font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full shrink-0">
                 {displayProducts.length}
               </span>
             </h2>
             {filteredProducts && (
-              <button
-                onClick={handleReset}
-                className="text-xs text-primary hover:underline font-medium"
-              >
+              <button onClick={handleReset} className="text-xs text-primary hover:underline font-medium shrink-0">
                 ← Show all products
               </button>
             )}
           </div>
 
-          <CategoryFilter
-            categories={categories}
-            selected={selectedCategory}
-            onSelect={setSelectedCategory}
-          />
+          <CategoryFilter categories={categories} selected={selectedCategory} onSelect={setSelectedCategory} />
         </div>
 
-        {/* Products grid */}
         {isLoading ? (
           <LoadingSkeleton />
         ) : displayProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
             {displayProducts.map((product, i) => (
               <ProductCard
                 key={product.id}
                 product={product}
                 highlighted={filteredProducts !== null}
                 index={i}
-                onClick={setSelectedProduct}
+                onClick={handleOpenProduct}
               />
             ))}
           </div>
@@ -235,20 +214,10 @@ const Index = () => {
           </motion.div>
         )}
 
-        {/* Footer */}
-        <footer className="mt-20 pt-8 border-t text-center">
-          <p className="text-xs text-muted-foreground">
-            Built with AI-powered search · DiscvrAI © {new Date().getFullYear()}
-          </p>
+        <footer className="mt-16 sm:mt-20 pt-8 border-t text-center">
+          <p className="text-xs text-muted-foreground">Built with AI-powered search · DiscvrAI © {new Date().getFullYear()}</p>
         </footer>
       </main>
-
-      {/* Product detail modal */}
-      <ProductDetailModal
-        product={selectedProduct}
-        open={!!selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-      />
     </div>
   );
 };
