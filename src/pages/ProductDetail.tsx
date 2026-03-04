@@ -102,12 +102,12 @@ const ProductDetail = () => {
             Back
           </Button>
 
-          <div className="flex items-center gap-2 min-w-0">
+          <a href="/" className="flex items-center gap-2 min-w-0 cursor-pointer no-underline">
             <div className="h-8 w-8 rounded-lg bg-gradient-ai flex items-center justify-center shadow-card shrink-0">
               <ShoppingBag className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="font-display font-semibold text-sm sm:text-base truncate">DiscvrAI</span>
-          </div>
+          </a>
         </div>
       </header>
 
